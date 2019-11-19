@@ -17,16 +17,36 @@ public class SearchesTest {
     @Test
     public void ifFoundItemsThenOk() throws JsonProcessingException {
 
+        String searchingValue = "Iphone X";
+
         Searches searches = new Searches();
-        List<Item> items = searches.SearchByString("Iphone X", SerachIn.Amazon);
+        List<Item> items = searches.SearchByString(searchingValue, SerachIn.Amazon);
+        List<Item> items1 = searches.SearchByString(searchingValue,SerachIn.MediaExpert);
         items.forEach(i -> i.setUrl("https://www.amazon.com" + i.getUrl()));
 
+        assertTrue(items1.size()>0);
+
+         assertTrue(items.size() > 0);
+        for (Item i : items) {
+            System.out.println(i.getTitle() + " " + i.getFullPrice() + " " + i.getUrl());
+        }
+    }
+
+    @Test
+    public void ifFoundItemsThenOkMediaE(){
+
+        String searchingValue = "Iphone X";
+
+        Searches searches = new Searches();
+        List<Item> items = searches.SearchByString(searchingValue,SerachIn.MediaExpert);
+        items.forEach(i -> i.setUrl("https://www.mediaexpert.pl" + i.getUrl()));
+
+        assertTrue(items.size()>0);
 
         assertTrue(items.size() > 0);
         for (Item i : items) {
             System.out.println(i.getTitle() + " " + i.getFullPrice() + " " + i.getUrl());
         }
-
     }
 
 

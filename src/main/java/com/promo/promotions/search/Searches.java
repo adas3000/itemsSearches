@@ -11,6 +11,8 @@ import com.promo.promotions.exceptions.NoSuchSearcher;
 import com.promo.promotions.model.Item;
 import org.springframework.stereotype.Component;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,22 +84,30 @@ public class Searches {
         String searchUrl = "";
         String getByXPath = "";
 
-        switch (serachIns) {
-            case Allegro:
-                pathPrice = ".//span[@class='fee8042']";
-                pathName = ".//h2[@class='ebc9be2 _5087f6f']/a";
-                searchUrl = "https://allegro.pl/listing?string=" + value;
-                getByXPath = "//div[@class='b659611 _307719f']";
-                break;
-            case Amazon:
-                pathPrice = ".//span[@class='a-price']/span";
-                pathName = ".//a[@class='a-link-normal a-text-normal']";
-                searchUrl = "https://www.amazon.com/s?k=" + value;
-                getByXPath = "//div[@class='sg-col-inner']";
-                break;
-            default:
-                throw new NoSuchSearcher("Wrong SerachIn value");
-        }
+            switch (serachIns) {
+                case Allegro:
+                    pathPrice = ".//span[@class='fee8042']";
+                    pathName = ".//h2[@class='ebc9be2 _5087f6f']/a";
+                    searchUrl = "https://allegro.pl/listing?string=" + value;
+                    getByXPath = "//div[@class='b659611 _307719f']";
+                    break;
+                case Amazon:
+                    pathPrice = ".//span[@class='a-price']/span";
+                    pathName = ".//a[@class='a-link-normal a-text-normal']";
+                    searchUrl = "https://www.amazon.com/s?k=" + value;
+                    getByXPath = "//div[@class='sg-col-inner']";
+                    break;
+                case MediaExpert:
+                    pathPrice = ".//p[@class='price price_txt is-desktop']/span";
+                    pathName = ".//h2[@class='c-offerBox_title']/a";
+                    searchUrl = "https://www.mediaexpert.pl/produkty?query=" +value;
+                    getByXPath = "//div[@class='c-grid_col is-grid-col-1']";
+                    break;
+                default:
+                    throw new NoSuchSearcher("Wrong SerachIn value");
+            }
+
+
 
         return this.search(pathPrice,pathName,searchUrl,getByXPath);
     }
@@ -114,14 +124,16 @@ public class Searches {
             HtmlPage page = webClient.getPage(searchUrl);
             List<HtmlElement> items = page.getByXPath(getByXPath);
 
-            System.out.println("ITEMS SIZE:"+items.size());
 
             for (HtmlElement item : items) {
                 HtmlAnchor itemAnchor = item.getFirstByXPath(pathName);
                 HtmlElement spanPrice = item.getFirstByXPath(pathPrice);
 
-                if (itemAnchor == null) continue;
-
+                //if (itemAnchor == null) continue;
+                if(itemAnchor==null){
+                    System.out.println("Item anchor is null");
+                    continue;
+                }
                 String itemPrice = spanPrice == null ? "0.0" : spanPrice.asText();
 
                 Item item1 = new Item();
@@ -129,7 +141,6 @@ public class Searches {
                 item1.setTitle(itemAnchor.asText());
                 item1.setFullPrice(itemPrice);
                 item1.setPrice(Item.aStringToBDecimal(itemPrice));
-
                 searchResult.add(item1);
             }
         } catch (Exception e) {
