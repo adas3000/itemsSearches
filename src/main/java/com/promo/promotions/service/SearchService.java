@@ -1,7 +1,7 @@
 package com.promo.promotions.service;
 
 import com.promo.promotions.enums.Category;
-import com.promo.promotions.enums.SerachIn;
+import com.promo.promotions.enums.Category.SerachIn;
 import com.promo.promotions.model.Item;
 import com.promo.promotions.request.SearchCategoryAndValueRequest;
 import com.promo.promotions.search.Searches;
@@ -35,13 +35,19 @@ public class SearchService {
 
         switch (category) {
             case Electronic:
-                List<Item> amazonlist = searches.SearchByString(value, SerachIn.Amazon);
+
+                for(SerachIn serachIn : Category.Electronic.getSerachIn()){
+                    new Thread(()->{
+                        result.addAll(searches.SearchByString(value, serachIn));
+                    }).start();
+                }
+               /* List<Item> amazonlist = searches.SearchByString(value, SerachIn.Amazon);
                 amazonlist.forEach(i -> i.setUrl("https://www.amazon.com" + i.getUrl()));
                 result.addAll(amazonlist);
                 new Thread(()->{
                     result.addAll(searches.SearchByString(value, SerachIn.Allegro));
                 }).start();
-
+               */
                 break;
         }
         return new ResponseEntity<>(result, HttpStatus.OK);

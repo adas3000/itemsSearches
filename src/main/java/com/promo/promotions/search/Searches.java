@@ -2,17 +2,14 @@ package com.promo.promotions.search;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.Html;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.promo.promotions.enums.SerachIn;
+import com.promo.promotions.enums.Category;
 import com.promo.promotions.exceptions.NoSuchSearcher;
 import com.promo.promotions.model.Item;
 import org.springframework.stereotype.Component;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,7 +73,7 @@ public class Searches {
         return searchResult;
     }
 
-    public List<Item> SearchByString(String value, SerachIn serachIns) {
+    public List<Item> SearchByString(String value, Category.SerachIn serachIns) {
 
 
         String pathPrice = "";
