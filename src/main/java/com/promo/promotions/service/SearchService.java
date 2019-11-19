@@ -35,8 +35,13 @@ public class SearchService {
 
         switch (category) {
             case Electronic:
-                result.addAll(searches.SearchByString(value, SerachIn.Allegro));
-                result.addAll(searches.SearchByString(value, SerachIn.Amazon));
+                List<Item> amazonlist = searches.SearchByString(value, SerachIn.Amazon);
+                amazonlist.forEach(i -> i.setUrl("https://www.amazon.com" + i.getUrl()));
+                result.addAll(amazonlist);
+                new Thread(()->{
+                    result.addAll(searches.SearchByString(value, SerachIn.Allegro));
+                }).start();
+
                 break;
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
