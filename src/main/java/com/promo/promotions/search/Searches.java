@@ -6,10 +6,13 @@ import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.promo.promotions.enums.Category;
+import com.promo.promotions.enums.ExchangeRates;
 import com.promo.promotions.exceptions.NoSuchSearcher;
 import com.promo.promotions.model.Item;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -105,7 +108,15 @@ public class Searches {
         }
 
         List<Item> items = this.search(pathPrice, pathName, searchUrl, getByXPath);
-        items.forEach(item->{ if(serachIns.isNeedsOriginUrl()) item.setUrl(serachIns.getOriginUrl()+item.getUrl()); });
+        items.forEach(item -> {
+            if (serachIns.isNeedsOriginUrl()) item.setUrl(serachIns.getOriginUrl() + item.getUrl());
+        });
+        items.forEach(item -> {
+            if (item.getFullPrice().contains("$")) {
+                item.setPrice(new BigDecimal(ExchangeRates.Dolar.toZl(item.getPrice().doubleValue())).setScale(2,RoundingMode.CEILING));
+                item.setFullPrice(item.getPrice()+"zł");
+            }
+        });
         //return this.search(pathPrice, pathName, searchUrl, getByXPath);
         return items;
     }

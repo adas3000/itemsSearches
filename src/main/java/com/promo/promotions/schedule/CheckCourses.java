@@ -35,11 +35,8 @@ public class CheckCourses {
 
     @Scheduled(fixedRate = 5000)
     public void printCurrentCourses(){
-
-        System.out.println("Dolar:"+ExchangeRates.Dolar.getValue());
-        System.out.println("Euro:"+ExchangeRates.Euro.getValue());
-        System.out.println("Pound:"+ExchangeRates.Pound.getValue());
-
+        System.out.printf("Dolar:%s,Euro:%s,GBP:%s\n",ExchangeRates.Dolar.getValue(),ExchangeRates.Euro.getValue(),
+                ExchangeRates.Pound.getValue());
     }
 
     private double getCourse(String link) throws IOException, ParserConfigurationException, SAXException {
