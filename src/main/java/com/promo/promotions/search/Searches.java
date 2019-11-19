@@ -98,7 +98,7 @@ public class Searches {
                     getByXPath = "//div[@class='sg-col-inner']";
                     break;
                 case MediaExpert:
-                    pathPrice = ".//p[@class='price price_txt is-desktop']/span";
+                    pathPrice = ".//p[@class='price price_txt is-desktop']";
                     pathName = ".//h2[@class='c-offerBox_title']/a";
                     searchUrl = "https://www.mediaexpert.pl/produkty?query=" +value;
                     getByXPath = "//div[@class='c-grid_col is-grid-col-1']";
