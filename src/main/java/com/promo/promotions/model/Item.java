@@ -34,7 +34,10 @@ public class Item {
     public static BigDecimal aStringToBDecimal(String value) {
 
         value = value.replace(" ", "");
-        value = value.replace("zł", "");
+
+        if(value.contains("zł")) value = value.replace("zł", "");
+        else if(value.contains("$")) value = value.replace("$","");
+
         value = value.replace(",", ".");
         return new BigDecimal(value);
     }

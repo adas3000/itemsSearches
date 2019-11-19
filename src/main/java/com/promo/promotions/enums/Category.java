@@ -1,5 +1,5 @@
 package com.promo.promotions.enums;
 
 public enum Category {
-    Electronic,Cloths,Cars;
+    Electronic,Cloths,Cars,Books;
 }
