@@ -19,10 +19,10 @@ public class CheckCourses {
 
     public static final String USD_COURSE = "http://api.nbp.pl/api/exchangerates/rates/A/USD/today/";
     public static final String EUR_COURSE = "http://api.nbp.pl/api/exchangerates/rates/A/EUR/today/";
-    public static final String GBP_COURSE = "http://api.nbp.pl/api/exchangerates/rates/c/GBP/today/";
+    public static final String GBP_COURSE = "http://api.nbp.pl/api/exchangerates/rates/A/GBP/today/";
 
 
-    @Scheduled(fixedRate = 500)
+    @Scheduled(fixedRate = 1000)
     public void checkDollarCourse() {
         try {
             ExchangeRates.Dolar.setValue(getCourse(USD_COURSE));
@@ -31,6 +31,15 @@ public class CheckCourses {
         } catch (Exception e) {
             System.out.println("Exception:" + e.getMessage());
         }
+    }
+
+    @Scheduled(fixedRate = 5000)
+    public void printCurrentCourses(){
+
+        System.out.println("Dolar:"+ExchangeRates.Dolar.getValue());
+        System.out.println("Euro:"+ExchangeRates.Euro.getValue());
+        System.out.println("Pound:"+ExchangeRates.Pound.getValue());
+
     }
 
     private double getCourse(String link) throws IOException, ParserConfigurationException, SAXException {
