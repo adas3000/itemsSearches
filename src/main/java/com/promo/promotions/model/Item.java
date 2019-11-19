@@ -6,6 +6,15 @@ public class Item {
     private String title;
     private BigDecimal price;
     private String url;
+    private String fullPrice;
+
+    public String getFullPrice() {
+        return fullPrice;
+    }
+
+    public void setFullPrice(String fullPrice) {
+        this.fullPrice = fullPrice;
+    }
 
     public String getTitle() {
         return title;

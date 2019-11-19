@@ -2,16 +2,19 @@ package com.promo.promotions.search;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.Html;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.promo.promotions.enums.SerachIn;
 import com.promo.promotions.exceptions.NoSuchSearcher;
 import com.promo.promotions.model.Item;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class Searches {
 
     public Searches(){
@@ -79,8 +82,6 @@ public class Searches {
         String searchUrl = "";
         String getByXPath = "";
 
-        List<Item> searchResult = new ArrayList<>();
-
         switch (serachIns) {
             case Allegro:
                 pathPrice = ".//span[@class='fee8042']";
@@ -89,10 +90,10 @@ public class Searches {
                 getByXPath = "//div[@class='b659611 _307719f']";
                 break;
             case Amazon:
-                pathPrice = ".//span[@class='a-price']";
-                pathName = ".//span[@class='a-size-medium a-color-base a-text-normal']";
+                pathPrice = ".//span[@class='a-price']/span";
+                pathName = ".//a[@class='a-link-normal a-text-normal']";
                 searchUrl = "https://www.amazon.com/s?k=" + value;
-                getByXPath = "//div[@class='sg-col-20-of-24 sg-col-28-of-32 sg-col-16-of-20 sg-col s-right-column sg-col-32-of-36 sg-col-8-of-12 sg-col-12-of-16 sg-col-24-of-28']";
+                getByXPath = "//div[@class='sg-col-inner']";
                 break;
             default:
                 throw new NoSuchSearcher("Wrong SerachIn value");
@@ -109,9 +110,11 @@ public class Searches {
             WebClient webClient = new WebClient();
             webClient.getOptions().setCssEnabled(false);
             webClient.getOptions().setJavaScriptEnabled(false);
+
             HtmlPage page = webClient.getPage(searchUrl);
             List<HtmlElement> items = page.getByXPath(getByXPath);
 
+            System.out.println("ITEMS SIZE:"+items.size());
 
             for (HtmlElement item : items) {
                 HtmlAnchor itemAnchor = item.getFirstByXPath(pathName);
@@ -124,8 +127,8 @@ public class Searches {
                 Item item1 = new Item();
                 item1.setUrl(itemAnchor.getHrefAttribute());
                 item1.setTitle(itemAnchor.asText());
+                item1.setFullPrice(itemPrice);
                 item1.setPrice(Item.aStringToBDecimal(itemPrice));
-
 
                 searchResult.add(item1);
             }
