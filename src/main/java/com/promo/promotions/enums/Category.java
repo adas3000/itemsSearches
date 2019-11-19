@@ -1,7 +1,7 @@
 package com.promo.promotions.enums;
 
 public enum Category {
-    Electronic(new SerachIn[]{SerachIn.Amazon, SerachIn.Allegro, SerachIn.MediaExpert, SerachIn.Amazon}),
+    Electronic(new SerachIn[]{SerachIn.Amazon, SerachIn.Allegro, SerachIn.MediaExpert}),
     Cloths(new SerachIn[]{SerachIn.Allegro}),
     Cars(new SerachIn[]{SerachIn.Allegro}),
     Books(new SerachIn[]{SerachIn.Allegro});

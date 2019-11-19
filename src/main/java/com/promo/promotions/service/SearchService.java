@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 
 @Service
@@ -21,36 +24,39 @@ public class SearchService {
     private Searches searches;
 
 
-    public ResponseEntity<Object> searchByValueAndCategory(SearchCategoryAndValueRequest valueRequest) {
+    public ResponseEntity<Object> searchByValueAndCategory(SearchCategoryAndValueRequest valueRequest)  {
 
         Category category;
         try {
             category = Category.valueOf(valueRequest.category);
-        }
-        catch(Exception e){
-            return new ResponseEntity<>("No such category",HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("No such category", HttpStatus.NOT_FOUND);
         }
         String value = valueRequest.value;
         List<Item> result = new ArrayList<>();
 
-        switch (category) {
-            case Electronic:
+        try {
+            List<Thread> currentThreads = new ArrayList<>();
+            for (SerachIn serachIn : category.getSerachIn()) {
+                Thread thread = new Thread(() -> {
+                    result.addAll(searches.SearchByString(value, serachIn));
+                    System.out.println("Thread:" + serachIn.toString() + " finished");
+                });
+                currentThreads.add(thread);
+                thread.start();
+            }
+            for (Thread t : currentThreads) {
+                while (t.isAlive()) TimeUnit.SECONDS.sleep(1);
+            }
 
-                for(SerachIn serachIn : Category.Electronic.getSerachIn()){
-                    new Thread(()->{
-                        result.addAll(searches.SearchByString(value, serachIn));
-                    }).start();
-                }
-               /* List<Item> amazonlist = searches.SearchByString(value, SerachIn.Amazon);
-                amazonlist.forEach(i -> i.setUrl("https://www.amazon.com" + i.getUrl()));
-                result.addAll(amazonlist);
-                new Thread(()->{
-                    result.addAll(searches.SearchByString(value, SerachIn.Allegro));
-                }).start();
-               */
-                break;
-        }
+
         return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+        catch(Exception e){
+            e.fillInStackTrace();
+            System.out.println("Exception:"+e.getMessage());
+            return new ResponseEntity<>("error",HttpStatus.BAD_REQUEST);
+        }
     }
 
 
