@@ -39,7 +39,10 @@ public class SearchService {
             List<Thread> currentThreads = new ArrayList<>();
             for (SerachIn serachIn : category.getSerachIn()) {
                 Thread thread = new Thread(() -> {
-                    result.addAll(searches.SearchByString(value, serachIn));
+                    synchronized (result)
+                    {
+                        result.addAll(searches.SearchByString(value, serachIn));
+                    }
                     System.out.println("Thread:" + serachIn.toString() + " finished");
                 });
                 currentThreads.add(thread);
@@ -48,7 +51,6 @@ public class SearchService {
             for (Thread t : currentThreads) {
                 while (t.isAlive()) TimeUnit.SECONDS.sleep(1);
             }
-
 
         return new ResponseEntity<>(result, HttpStatus.OK);
         }
