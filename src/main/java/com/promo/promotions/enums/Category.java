@@ -7,12 +7,41 @@ public enum Category {
     Books(new SerachIn[]{SerachIn.Allegro});
 
     public enum SerachIn {
-        Allegro,Amazon,MediaExpert,MediaMarkt,Zalando,AboutYou,AnsWear,Otomoto,AutoScout24,Sprzedajemy;
+        Allegro("https://allegro.pl",false), Amazon("https://www.amazon.com",true),
+        MediaExpert("https://mediaexpert.pl",true), MediaMarkt("",true),
+        Zalando("",false), AboutYou("",false),
+        AnsWear("",false), Otomoto("",false),
+        AutoScout24("",false), Sprzedajemy("",false);
+
+        private String originUrl;
+        private boolean needsOriginUrl;
+
+        SerachIn(String originUrl, boolean needsOriginUrl) {
+            this.originUrl = originUrl;
+            this.needsOriginUrl = needsOriginUrl;
+        }
+
+        public String getOriginUrl() {
+            return originUrl;
+        }
+
+        public void setOriginUrl(String originUrl) {
+            this.originUrl = originUrl;
+        }
+
+        public boolean isNeedsOriginUrl() {
+            return needsOriginUrl;
+        }
+
+        public void setNeedsOriginUrl(boolean needsOriginUrl) {
+            this.needsOriginUrl = needsOriginUrl;
+        }
     }
+
 
     private SerachIn[] serachIn;
 
-    Category(SerachIn[] serachIns){
+    Category(SerachIn[] serachIns) {
         this.serachIn = serachIns;
     }
 

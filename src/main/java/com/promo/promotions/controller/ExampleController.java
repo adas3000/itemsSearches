@@ -20,18 +20,25 @@ public class ExampleController {
     private SearchService searchService;
 
     @GetMapping("/items")
-    public List<String> items(){
-        return List.of("Bake","Cake","Tequila","Else");
+    public List<String> items() {
+        return List.of("Bake", "Cake", "Tequila", "Else");
     }
 
     @GetMapping("/allegrosearch")
-    public List<Item> searchItems(@RequestParam String searching){
-        System.out.println("SERACHING "+searching);
+    public List<Item> searchItems(@RequestParam String searching) {
+        System.out.println("SERACHING " + searching);
         return Searches.allegroSearchByString(searching);
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Object> search(@RequestBody @NonNull @Valid SearchCategoryAndValueRequest searchCategoryAndValueRequest){
+    public ResponseEntity<Object> search(@RequestBody @NonNull @Valid SearchCategoryAndValueRequest searchCategoryAndValueRequest) {
         return searchService.searchByValueAndCategory(searchCategoryAndValueRequest);
     }
+
+    @GetMapping("/searchfortest")
+    public ResponseEntity<Object> searchTests(@RequestParam String category, @RequestParam String value) {
+        return searchService.searchByValueAndCategory(new SearchCategoryAndValueRequest(category, value));
+    }
+
+
 }

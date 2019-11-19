@@ -1,5 +1,6 @@
 package com.promo.promotions.service;
 
+import com.promo.promotions.comparators.SortByPrice;
 import com.promo.promotions.enums.Category;
 import com.promo.promotions.enums.Category.SerachIn;
 import com.promo.promotions.model.Item;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -24,7 +26,7 @@ public class SearchService {
     private Searches searches;
 
 
-    public ResponseEntity<Object> searchByValueAndCategory(SearchCategoryAndValueRequest valueRequest)  {
+    public ResponseEntity<Object> searchByValueAndCategory(SearchCategoryAndValueRequest valueRequest) {
 
         Category category;
         try {
@@ -39,8 +41,7 @@ public class SearchService {
             List<Thread> currentThreads = new ArrayList<>();
             for (SerachIn serachIn : category.getSerachIn()) {
                 Thread thread = new Thread(() -> {
-                    synchronized (result)
-                    {
+                    synchronized (result) {
                         result.addAll(searches.SearchByString(value, serachIn));
                     }
                     System.out.println("Thread:" + serachIn.toString() + " finished");
@@ -51,13 +52,13 @@ public class SearchService {
             for (Thread t : currentThreads) {
                 while (t.isAlive()) TimeUnit.SECONDS.sleep(1);
             }
+            Collections.sort(result, new SortByPrice());
 
-        return new ResponseEntity<>(result, HttpStatus.OK);
-        }
-        catch(Exception e){
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
             e.fillInStackTrace();
-            System.out.println("Exception:"+e.getMessage());
-            return new ResponseEntity<>("error",HttpStatus.BAD_REQUEST);
+            System.out.println("Exception:" + e.getMessage());
+            return new ResponseEntity<>("error", HttpStatus.BAD_REQUEST);
         }
     }
 

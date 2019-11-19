@@ -16,7 +16,7 @@ import java.util.List;
 @Component
 public class Searches {
 
-    public Searches(){
+    public Searches() {
 
     }
 
@@ -81,32 +81,33 @@ public class Searches {
         String searchUrl = "";
         String getByXPath = "";
 
-            switch (serachIns) {
-                case Allegro:
-                    pathPrice = ".//span[@class='fee8042']";
-                    pathName = ".//h2[@class='ebc9be2 _5087f6f']/a";
-                    searchUrl = "https://allegro.pl/listing?string=" + value;
-                    getByXPath = "//div[@class='b659611 _307719f']";
-                    break;
-                case Amazon:
-                    pathPrice = ".//span[@class='a-price']/span";
-                    pathName = ".//a[@class='a-link-normal a-text-normal']";
-                    searchUrl = "https://www.amazon.com/s?k=" + value;
-                    getByXPath = "//div[@class='sg-col-inner']";
-                    break;
-                case MediaExpert:
-                    pathPrice = ".//p[@class='price price_txt is-desktop']";
-                    pathName = ".//h2[@class='c-offerBox_title']/a";
-                    searchUrl = "https://www.mediaexpert.pl/produkty?query=" +value;
-                    getByXPath = "//div[@class='c-grid_col is-grid-col-1']";
-                    break;
-                default:
-                    throw new NoSuchSearcher("Wrong SerachIn value");
-            }
+        switch (serachIns) {
+            case Allegro:
+                pathPrice = ".//span[@class='fee8042']";
+                pathName = ".//h2[@class='ebc9be2 _5087f6f']/a";
+                searchUrl = "https://allegro.pl/listing?string=" + value;
+                getByXPath = "//div[@class='b659611 _307719f']";
+                break;
+            case Amazon:
+                pathPrice = ".//span[@class='a-price']/span";
+                pathName = ".//a[@class='a-link-normal a-text-normal']";
+                searchUrl = "https://www.amazon.com/s?k=" + value;
+                getByXPath = "//div[@class='sg-col-inner']";
+                break;
+            case MediaExpert:
+                pathPrice = ".//p[@class='price price_txt is-desktop']";
+                pathName = ".//h2[@class='c-offerBox_title']/a";
+                searchUrl = "https://www.mediaexpert.pl/produkty?query=" + value;
+                getByXPath = "//div[@class='c-grid_col is-grid-col-1']";
+                break;
+            default:
+                throw new NoSuchSearcher("Wrong SerachIn value");
+        }
 
-
-
-        return this.search(pathPrice,pathName,searchUrl,getByXPath);
+        List<Item> items = this.search(pathPrice, pathName, searchUrl, getByXPath);
+        items.forEach(item->{ if(serachIns.isNeedsOriginUrl()) item.setUrl(serachIns.getOriginUrl()+item.getUrl()); });
+        //return this.search(pathPrice, pathName, searchUrl, getByXPath);
+        return items;
     }
 
     private List<Item> search(String pathPrice, String pathName, String searchUrl, String getByXPath) {
@@ -127,12 +128,10 @@ public class Searches {
                 HtmlElement spanPrice = item.getFirstByXPath(pathPrice);
 
                 //if (itemAnchor == null) continue;
-                if(itemAnchor==null){
-                    System.out.println("Item anchor is null");
+                if (itemAnchor == null) {
                     continue;
                 }
                 String itemPrice = spanPrice == null ? "0.0" : spanPrice.asText();
-
                 Item item1 = new Item();
                 item1.setUrl(itemAnchor.getHrefAttribute());
                 item1.setTitle(itemAnchor.asText());
