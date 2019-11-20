@@ -5,6 +5,7 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.promo.promotions.enums.CategoriesTypes;
 import com.promo.promotions.enums.Category;
 import com.promo.promotions.enums.ExchangeRates;
 import com.promo.promotions.exceptions.NoSuchSearcher;
@@ -119,6 +120,27 @@ public class Searches {
         });
         //return this.search(pathPrice, pathName, searchUrl, getByXPath);
         return items;
+    }
+
+    public List<Item> SearchByString(String value, CategoriesTypes.Categories categories) {
+
+
+        String pathPrice = "";
+        String pathName = "";
+        String searchUrl = "";
+        String getByXPath = "";
+
+        switch(categories){
+            case All:
+
+                break;
+            case Electronic:
+
+                break;
+        }
+
+
+        return null;
     }
 
     private List<Item> search(String pathPrice, String pathName, String searchUrl, String getByXPath) {

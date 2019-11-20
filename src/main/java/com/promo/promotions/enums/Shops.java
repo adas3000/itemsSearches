@@ -13,9 +13,7 @@ public enum Shops {
             new CategoriesTypes(Categories.All, "", false),
             new CategoriesTypes(Categories.Electronic, "https://www.amazon.com/s?k=value&i=electronics", true),
             new CategoriesTypes(Categories.Books, "https://www.amazon.com/s?k=value&i=stripbooks", true),
-    },"https://amazon.com")
-
-    ;
+    },"https://amazon.com");
 
     private String originUrl;
     private CategoriesTypes[] categories;
