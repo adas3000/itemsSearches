@@ -4,7 +4,7 @@ public enum Category {
     Electronic(new SerachIn[]{SerachIn.Amazon, SerachIn.Allegro, SerachIn.MediaExpert}),
     Cloths(new SerachIn[]{SerachIn.Allegro}),
     Cars(new SerachIn[]{SerachIn.Allegro}),
-    Books(new SerachIn[]{SerachIn.Allegro});
+    Books(new SerachIn[]{SerachIn.Allegro,SerachIn.Amazon});
 
     public enum SerachIn {
         Allegro("https://allegro.pl",false), Amazon("https://www.amazon.com",true),
