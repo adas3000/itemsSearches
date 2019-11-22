@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 
+import javax.annotation.PostConstruct;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -17,24 +18,26 @@ import java.net.URL;
 @Component
 public class CheckCourses {
 
-    public static final String USD_COURSE = "http://api.nbp.pl/api/exchangerates/rates/A/USD/today/";
-    public static final String EUR_COURSE = "http://api.nbp.pl/api/exchangerates/rates/A/EUR/today/";
-    public static final String GBP_COURSE = "http://api.nbp.pl/api/exchangerates/rates/A/GBP/today/";
+    private static final String USD_COURSE = "http://api.nbp.pl/api/exchangerates/rates/A/USD";
+    private static final String EUR_COURSE = "http://api.nbp.pl/api/exchangerates/rates/A/EUR";
+    private static final String GBP_COURSE = "http://api.nbp.pl/api/exchangerates/rates/A/GBP";
 
 
-    @Scheduled(fixedRate = 1000)
+    @Scheduled(fixedRate = 100000)
+    @PostConstruct
     public void checkDollarCourse() {
         try {
             ExchangeRates.Dolar.setValue(getCourse(USD_COURSE));
             ExchangeRates.Euro.setValue(getCourse(EUR_COURSE));
             ExchangeRates.Pound.setValue(getCourse(GBP_COURSE));
+            printCurrentCourses();
         } catch (Exception e) {
             System.out.println("Exception:" + e.getMessage());
         }
     }
 
-    @Scheduled(fixedRate = 5000)
-    public void printCurrentCourses(){
+  //  @Scheduled(fixedRate = 5000)
+    private void printCurrentCourses(){
         System.out.printf("Dolar:%s,Euro:%s,GBP:%s\n",ExchangeRates.Dolar.getValue(),ExchangeRates.Euro.getValue(),
                 ExchangeRates.Pound.getValue());
     }
