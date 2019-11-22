@@ -16,8 +16,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 
@@ -72,12 +70,12 @@ public class SearchService {
             return new ResponseEntity<>("No such category", HttpStatus.NOT_FOUND);
         }
         String value = valueRequest.value;
-        List<Item> result = new ArrayList<>();
 
         List<Shops> searchIn = searches.findShopsByCategory(value, category);
         if (searchIn == null || searchIn.size() == 0) {
             return new ResponseEntity<>("no_shops_founded", HttpStatus.NOT_FOUND);
         }
+
         List<Item> items = new ArrayList<>();
         try {
             List<Thread> currentThreads = new ArrayList<>();
@@ -87,7 +85,7 @@ public class SearchService {
                     synchronized (items) {
                         items.addAll(searches.findAllByShopAndCategory(value, shop, category));
                     }
-                    System.out.print("Thread:" + shop.toString() + "finished\n");
+                    System.out.print("Thread:" + shop.toString() + " finished\n");
                 });
                 currentThreads.add(thread);
                 thread.start();

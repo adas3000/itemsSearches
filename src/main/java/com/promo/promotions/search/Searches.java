@@ -139,7 +139,8 @@ public class Searches {
         if(categoriesTypes==null){
             return List.of();
         }
-        String url = categoriesTypes.isNeedsinsertintovalue() ? categoriesTypes.getUrl().replace("value",value) : categoriesTypes.getUrl();
+        String url = categoriesTypes.isNeedsinsertintovalue() ? categoriesTypes.getUrl().replace("value",value) : categoriesTypes.getUrl()+value;
+        url = url.replace(" ","+");
         List<Item> items = this.search(shop.getPathPrice(),shop.getPathName(),url,shop.getGetByXPathParent());
         items.forEach(item -> {
             if(shop.isNeedsOriginUrlTohref()) item.setUrl(shop.getOriginUrl()+item.getUrl());
