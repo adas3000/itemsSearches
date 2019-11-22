@@ -40,11 +40,14 @@ public class Searches {
         //  while(true) {
         try {
             HtmlPage page = webClient.getPage(searchUrl);
-            List<HtmlElement> items = page.getByXPath("//div[@class='b659611 _307719f']");
+            List<HtmlElement> items = page.getByXPath(".//div[@class='_65c539b']");
+
+            System.out.println("Items count:" + items.size());
 
             if (items.isEmpty()) {
                 return searchResult;
             }
+
 
             for (HtmlElement item : items) {
                 HtmlAnchor itemAnchor = item.getFirstByXPath(allegroPathName);
@@ -79,27 +82,26 @@ public class Searches {
 
         List<Shops> searchIn = new ArrayList<>(Arrays.asList(Shops.values()));
 
-        return searchIn.stream().filter(s->s.hasCategory(categories)).collect(Collectors.toList());
+        return searchIn.stream().filter(s -> s.hasCategory(categories)).collect(Collectors.toList());
     }
 
-    public List<Item> findAllByShopAndCategory(String value,Shops shop,CategoriesTypes.Categories categories){
+    public List<Item> findAllByShopAndCategory(String value, Shops shop, CategoriesTypes.Categories categories) {
 
-        CategoriesTypes categoriesTypes = shop.getCategoriesTypesList().stream().filter(s->s.getCategory().equals(categories)).findFirst().orElse(null);
+        CategoriesTypes categoriesTypes = shop.getCategoriesTypesList().stream().filter(s -> s.getCategory().equals(categories)).findFirst().orElse(null);
 
-        if(categoriesTypes==null){
+        if (categoriesTypes == null) {
             return List.of();
         }
-        String url = categoriesTypes.isNeedsinsertintovalue() ? categoriesTypes.getUrl().replace("value",value) : categoriesTypes.getUrl()+value;
-        url = url.replace(" ","+");
-        List<Item> items = this.search(shop.getPathPrice(),shop.getPathName(),url,shop.getGetByXPathParent());
+        String url = categoriesTypes.isNeedsinsertintovalue() ? categoriesTypes.getUrl().replace("value", value) : categoriesTypes.getUrl() + value;
+        url = url.replace(" ", "+");
+        List<Item> items = this.search(shop.getPathPrice(), shop.getPathName(), url, shop.getGetByXPathParent());
         items.forEach(item -> {
-            if(shop.isNeedsOriginUrlTohref()) item.setUrl(shop.getOriginUrl()+item.getUrl());
+            if (shop.isNeedsOriginUrlTohref()) item.setUrl(shop.getOriginUrl() + item.getUrl());
         });
         return items;
     }
 
     private List<Item> search(String pathPrice, String pathName, String searchUrl, String getByXPath) {
-
         List<Item> searchResult = new ArrayList<>();
 
         try {
@@ -109,7 +111,6 @@ public class Searches {
 
             HtmlPage page = webClient.getPage(searchUrl);
             List<HtmlElement> items = page.getByXPath(getByXPath);
-
 
             for (HtmlElement item : items) {
                 HtmlAnchor itemAnchor = item.getFirstByXPath(pathName);
@@ -125,6 +126,7 @@ public class Searches {
                 item1.setFullPrice(itemPrice);
                 item1.setPrice(Item.aStringToBDecimal(itemPrice));
                 searchResult.add(item1);
+                System.out.println(item1);
             }
         } catch (Exception e) {
             System.out.println("Error:" + e.getMessage());

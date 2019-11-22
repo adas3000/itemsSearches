@@ -51,5 +51,13 @@ public class Item {
         return new BigDecimal(value);
     }
 
-
+    @Override
+    public String toString() {
+        return "Item{" +
+                "title='" + title + '\'' +
+                ", price=" + price +
+                ", url='" + url + '\'' +
+                ", fullPrice='" + fullPrice + '\'' +
+                '}';
+    }
 }
