@@ -13,11 +13,17 @@ public enum Shops {
             new CategoriesTypes(Categories.Cloths, "https://allegro.pl/kategoria/moda?string=", false),
             new CategoriesTypes(Categories.Books, "https://allegro.pl/kategoria/ksiazki-i-komiksy?string=", false),
             new CategoriesTypes(Categories.Cars, "https://allegro.pl/kategoria/motoryzacja?string=", false)},
-            "https://allegro.pl",false,".//span[@class='fee8042']",".//h2[@class='ebc9be2 _5087f6f']/a","//div[@class='b659611 _307719f']"),
+            "https://allegro.pl", false, ".//span[@class='fee8042']", ".//h2[@class='ebc9be2 _5087f6f']/a",
+            "//div[@class='b659611 _307719f']"),
     Amazon(new CategoriesTypes[]{new CategoriesTypes(Categories.All, "https://www.amazon.com/s?k=", false),
             new CategoriesTypes(Categories.Electronic, "https://www.amazon.com/s?k=" + replacementvalue + "&i=electronics", true),
             new CategoriesTypes(Categories.Books, "https://www.amazon.com/s?k=" + replacementvalue + "&i=stripbooks", true),
-    }, "https://amazon.com",true,".//span[@class='a-price']/span",".//a[@class='a-link-normal a-text-normal']","//div[@class='sg-col-inner']");
+    }, "https://amazon.com", true, ".//span[@class='a-price']/span", ".//a[@class='a-link-normal a-text-normal']",
+            "//div[@class='sg-col-inner']"),
+    MediaExpert(new CategoriesTypes[]{new CategoriesTypes(Categories.All, "https://www.mediaexpert.pl/produkty?query=", false),
+            new CategoriesTypes(Categories.Electronic, "https://www.mediaexpert.pl/produkty?query=", false)},
+            "https://www.mediaexpert.pl", false, ".//p[@class='price price_txt is-desktop']", ".//h2[@class='c-offerBox_title']/a",
+            "//div[@class='c-grid_col is-grid-col-1']");
 
     private String originUrl;
     private CategoriesTypes[] categories;
@@ -55,7 +61,7 @@ public enum Shops {
         return categoriesTypesList;
     }
 
-    public boolean hasCategory(Categories categories){
+    public boolean hasCategory(Categories categories) {
         return categoriesTypesList.stream().anyMatch(c -> c.getCategory().equals(categories));
     }
 
