@@ -22,7 +22,7 @@ public enum Shops {
             "//div[@class='sg-col-inner']"),
     MediaExpert(new CategoriesTypes[]{new CategoriesTypes(Categories.All, "https://www.mediaexpert.pl/produkty?query=", false),
             new CategoriesTypes(Categories.Electronic, "https://www.mediaexpert.pl/produkty?query=", false)},
-            "https://www.mediaexpert.pl", false, ".//p[@class='price price_txt is-desktop']", ".//h2[@class='c-offerBox_title']/a",
+            "https://www.mediaexpert.pl", true, ".//p[@class='price price_txt is-desktop']", ".//h2[@class='c-offerBox_title']/a",
             "//div[@class='c-grid_col is-grid-col-1']");
 
     private String originUrl;
