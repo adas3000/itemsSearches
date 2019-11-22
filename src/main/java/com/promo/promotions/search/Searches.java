@@ -8,6 +8,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.promo.promotions.enums.CategoriesTypes;
 import com.promo.promotions.enums.Category;
 import com.promo.promotions.enums.ExchangeRates;
+import com.promo.promotions.enums.Shops;
 import com.promo.promotions.exceptions.NoSuchSearcher;
 import com.promo.promotions.model.Item;
 import org.springframework.stereotype.Component;
@@ -15,7 +16,9 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class Searches {
@@ -114,33 +117,31 @@ public class Searches {
         });
         items.forEach(item -> {
             if (item.getFullPrice().contains("$")) {
-                item.setPrice(new BigDecimal(ExchangeRates.Dolar.toZl(item.getPrice().doubleValue())).setScale(2,RoundingMode.CEILING));
-                item.setFullPrice(item.getPrice()+"zł");
+                item.setPrice(new BigDecimal(ExchangeRates.Dolar.toZl(item.getPrice().doubleValue())).setScale(2, RoundingMode.CEILING));
+                item.setFullPrice(item.getPrice() + "zł");
             }
         });
         //return this.search(pathPrice, pathName, searchUrl, getByXPath);
         return items;
     }
 
-    public List<Item> SearchByString(String value, CategoriesTypes.Categories categories) {
+    public List<Shops> findShopsByCategory(String value, CategoriesTypes.Categories categories) {
 
+        List<Shops> searchIn = new ArrayList<>(Arrays.asList(Shops.values()));
 
-        String pathPrice = "";
-        String pathName = "";
-        String searchUrl = "";
-        String getByXPath = "";
+        return searchIn.stream().filter(s->s.hasCategory(categories)).collect(Collectors.toList());
+    }
 
-        switch(categories){
-            case All:
+    public List<Item> findAllByShopAndCategory(String value,Shops shop,CategoriesTypes.Categories categories){
 
-                break;
-            case Electronic:
+        CategoriesTypes categoriesTypes = shop.getCategoriesTypesList().stream().filter(s->s.getCategory().equals(categories)).findFirst().orElse(null);
 
-                break;
+        if(categoriesTypes==null){
+            return List.of();
         }
+        String url = categoriesTypes.isNeedsinsertintovalue() ? categoriesTypes.getUrl().replace("value",value) : categoriesTypes.getUrl();
 
-
-        return null;
+        return this.search(shop.getPathPrice(),shop.getPathName(),url,shop.getGetByXPathParent());
     }
 
     private List<Item> search(String pathPrice, String pathName, String searchUrl, String getByXPath) {
@@ -160,11 +161,10 @@ public class Searches {
                 HtmlAnchor itemAnchor = item.getFirstByXPath(pathName);
                 HtmlElement spanPrice = item.getFirstByXPath(pathPrice);
 
-                //if (itemAnchor == null) continue;
-                if (itemAnchor == null) {
+                if (itemAnchor == null || spanPrice == null) {
                     continue;
                 }
-                String itemPrice = spanPrice == null ? "0.0" : spanPrice.asText();
+                String itemPrice = spanPrice.asText();
                 Item item1 = new Item();
                 item1.setUrl(itemAnchor.getHrefAttribute());
                 item1.setTitle(itemAnchor.asText());

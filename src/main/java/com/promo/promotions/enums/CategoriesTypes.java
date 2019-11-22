@@ -2,6 +2,8 @@ package com.promo.promotions.enums;
 
 public class CategoriesTypes {
 
+    public static final String replacementvalue = "value";
+
     public enum Categories {
         All,
         Electronic,
@@ -14,7 +16,8 @@ public class CategoriesTypes {
     private String url;
     private boolean needsinsertintovalue;
 
-    public CategoriesTypes(Categories category,String url,boolean needsinsertintovalue){
+
+    public CategoriesTypes(Categories category, String url, boolean needsinsertintovalue) {
         this.category = category;
         this.url = url;
         this.needsinsertintovalue = needsinsertintovalue;
