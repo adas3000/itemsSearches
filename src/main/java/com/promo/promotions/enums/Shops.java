@@ -13,11 +13,11 @@ public enum Shops {
             new CategoriesTypes(Categories.Cloths, "https://allegro.pl/kategoria/moda?string=", false),
             new CategoriesTypes(Categories.Books, "https://allegro.pl/kategoria/ksiazki-i-komiksy?string=", false),
             new CategoriesTypes(Categories.Cars, "https://allegro.pl/kategoria/motoryzacja?string=", false)},
-            "https://allegro.pl",".//span[@class='fee8042']",".//h2[@class='ebc9be2 _5087f6f']/a","//div[@class='b659611 _307719f']"),
+            "https://allegro.pl",false,".//span[@class='fee8042']",".//h2[@class='ebc9be2 _5087f6f']/a","//div[@class='b659611 _307719f']"),
     Amazon(new CategoriesTypes[]{new CategoriesTypes(Categories.All, "https://www.amazon.com/s?k=", false),
             new CategoriesTypes(Categories.Electronic, "https://www.amazon.com/s?k=" + replacementvalue + "&i=electronics", true),
             new CategoriesTypes(Categories.Books, "https://www.amazon.com/s?k=" + replacementvalue + "&i=stripbooks", true),
-    }, "https://amazon.com",".//span[@class='a-price']/span",".//a[@class='a-link-normal a-text-normal']","//div[@class='sg-col-inner']");
+    }, "https://amazon.com",true,".//span[@class='a-price']/span",".//a[@class='a-link-normal a-text-normal']","//div[@class='sg-col-inner']");
 
     private String originUrl;
     private CategoriesTypes[] categories;
@@ -25,13 +25,23 @@ public enum Shops {
     private String pathPrice;
     private String pathName;
     private String getByXPathParent;
+    private boolean needsOriginUrlTohref;
 
-    Shops(CategoriesTypes[] categories,String originUrl, String pathPrice, String pathName, String getByXPathParent) {
+    public boolean isNeedsOriginUrlTohref() {
+        return needsOriginUrlTohref;
+    }
+
+    public void setNeedsOriginUrlTohref(boolean needsOriginUrlTohref) {
+        this.needsOriginUrlTohref = needsOriginUrlTohref;
+    }
+
+    Shops(CategoriesTypes[] categories, String originUrl, boolean needsOriginUrlTohref, String pathPrice, String pathName, String getByXPathParent) {
         this.originUrl = originUrl;
         this.categories = categories;
         this.categoriesTypesList = new ArrayList<>(Arrays.asList(categories));
         this.pathPrice = pathPrice;
         this.pathName = pathName;
+        this.needsOriginUrlTohref = needsOriginUrlTohref;
         this.getByXPathParent = getByXPathParent;
     }
 

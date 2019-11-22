@@ -87,7 +87,7 @@ public class SearchService {
                     synchronized (items) {
                         items.addAll(searches.findAllByShopAndCategory(value, shop, category));
                     }
-                    System.out.print("Thread:" + shop.toString() + "finished");
+                    System.out.print("Thread:" + shop.toString() + "finished\n");
                 });
                 currentThreads.add(thread);
                 thread.start();

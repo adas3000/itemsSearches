@@ -140,8 +140,11 @@ public class Searches {
             return List.of();
         }
         String url = categoriesTypes.isNeedsinsertintovalue() ? categoriesTypes.getUrl().replace("value",value) : categoriesTypes.getUrl();
-
-        return this.search(shop.getPathPrice(),shop.getPathName(),url,shop.getGetByXPathParent());
+        List<Item> items = this.search(shop.getPathPrice(),shop.getPathName(),url,shop.getGetByXPathParent());
+        items.forEach(item -> {
+            if(shop.isNeedsOriginUrlTohref()) item.setUrl(shop.getOriginUrl()+item.getUrl());
+        });
+        return items;
     }
 
     private List<Item> search(String pathPrice, String pathName, String searchUrl, String getByXPath) {

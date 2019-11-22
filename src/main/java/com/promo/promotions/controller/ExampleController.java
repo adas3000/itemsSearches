@@ -32,12 +32,12 @@ public class ExampleController {
 
     @GetMapping("/search")
     public ResponseEntity<Object> search(@RequestBody @NonNull @Valid SearchCategoryAndValueRequest searchCategoryAndValueRequest) {
-        return searchService.searchByValueAndCategory(searchCategoryAndValueRequest);
+        return searchService.searchByValueAndCategoryDiffMeth(searchCategoryAndValueRequest);
     }
 
     @GetMapping("/searchfortest")
     public ResponseEntity<Object> searchTests(@RequestParam String category, @RequestParam String value) {
-        return searchService.searchByValueAndCategory(new SearchCategoryAndValueRequest(category, value));
+        return searchService.searchByValueAndCategoryDiffMeth(new SearchCategoryAndValueRequest(category, value));
     }
 
 
