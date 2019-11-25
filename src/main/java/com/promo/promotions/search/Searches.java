@@ -5,11 +5,14 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.promo.promotions.Methods.MyString;
 import com.promo.promotions.enums.CategoriesTypes;
+import com.promo.promotions.enums.ExchangeRates;
 import com.promo.promotions.enums.Shops;
 import com.promo.promotions.model.Item;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,11 +43,14 @@ public class Searches {
         //  while(true) {
         try {
             HtmlPage page = webClient.getPage(searchUrl);
-            List<HtmlElement> items = page.getByXPath("//div[@class='b659611 _307719f']");
+            List<HtmlElement> items = page.getByXPath(".//div[@class='_65c539b']");
+
+            System.out.println("Items count:" + items.size());
 
             if (items.isEmpty()) {
                 return searchResult;
             }
+
 
             for (HtmlElement item : items) {
                 HtmlAnchor itemAnchor = item.getFirstByXPath(allegroPathName);
@@ -79,27 +85,29 @@ public class Searches {
 
         List<Shops> searchIn = new ArrayList<>(Arrays.asList(Shops.values()));
 
-        return searchIn.stream().filter(s->s.hasCategory(categories)).collect(Collectors.toList());
+        return searchIn.stream().filter(s -> s.hasCategory(categories)).collect(Collectors.toList());
     }
 
-    public List<Item> findAllByShopAndCategory(String value,Shops shop,CategoriesTypes.Categories categories){
+    public List<Item> findAllByShopAndCategory(String value, Shops shop, CategoriesTypes.Categories categories) {
 
-        CategoriesTypes categoriesTypes = shop.getCategoriesTypesList().stream().filter(s->s.getCategory().equals(categories)).findFirst().orElse(null);
+        CategoriesTypes categoriesTypes = shop.getCategoriesTypesList().stream().filter(s -> s.getCategory().equals(categories)).findFirst().orElse(null);
 
-        if(categoriesTypes==null){
+        if (categoriesTypes == null) {
             return List.of();
         }
-        String url = categoriesTypes.isNeedsinsertintovalue() ? categoriesTypes.getUrl().replace("value",value) : categoriesTypes.getUrl()+value;
-        url = url.replace(" ","+");
-        List<Item> items = this.search(shop.getPathPrice(),shop.getPathName(),url,shop.getGetByXPathParent());
+        String url = categoriesTypes.isNeedsinsertintovalue() ? categoriesTypes.getUrl().replace("value", value) : categoriesTypes.getUrl() + value;
+        url = url.replace(" ", "+");
+        List<Item> items = this.search(shop.getPathPrice(), shop.getPathName(), url, shop.getGetByXPathParent());
         items.forEach(item -> {
-            if(shop.isNeedsOriginUrlTohref()) item.setUrl(shop.getOriginUrl()+item.getUrl());
+            if (shop.isNeedsOriginUrlTohref()) item.setUrl(shop.getOriginUrl() + item.getUrl());
+            if(!item.getFullPrice().contains(".")) item.setFullPrice(MyString.insert(item.getFullPrice(),".",item.getFullPrice().length()-2));
+            if(!item.getFullPrice().contains("zł") && !item.getFullPrice().contains("$")) item.setFullPrice(item.getFullPrice()+" zł");
+            item.setShop(shop.toString());
         });
         return items;
     }
 
     private List<Item> search(String pathPrice, String pathName, String searchUrl, String getByXPath) {
-
         List<Item> searchResult = new ArrayList<>();
 
         try {
@@ -109,7 +117,6 @@ public class Searches {
 
             HtmlPage page = webClient.getPage(searchUrl);
             List<HtmlElement> items = page.getByXPath(getByXPath);
-
 
             for (HtmlElement item : items) {
                 HtmlAnchor itemAnchor = item.getFirstByXPath(pathName);
@@ -124,6 +131,11 @@ public class Searches {
                 item1.setTitle(itemAnchor.asText());
                 item1.setFullPrice(itemPrice);
                 item1.setPrice(Item.aStringToBDecimal(itemPrice));
+
+                if(itemPrice.contains("$")){
+                    item1.setPriceInPlnIfPlnNotDefault(MyString.toPln(ExchangeRates.Dolar,item1.getPrice()));
+                }
+
                 searchResult.add(item1);
             }
         } catch (Exception e) {

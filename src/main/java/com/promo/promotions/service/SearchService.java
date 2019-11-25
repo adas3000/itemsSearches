@@ -1,6 +1,5 @@
 package com.promo.promotions.service;
 
-import com.promo.promotions.comparators.SortByPrice;
 import com.promo.promotions.enums.CategoriesTypes;
 import com.promo.promotions.enums.Shops;
 import com.promo.promotions.model.Item;
@@ -43,6 +42,10 @@ public class SearchService {
         }
 
         List<Item> items = new ArrayList<>();
+
+            items.addAll(searches.findAllByShopAndCategory(value,Shops.Allegro,category));
+
+
         try {
             List<Thread> currentThreads = new ArrayList<>();
 
@@ -63,6 +66,7 @@ public class SearchService {
             System.out.print("Exception:" + e.getMessage());
             return new ResponseEntity<>("Error_in_searchByValueAndCategoryDiffMeth", HttpStatus.BAD_REQUEST);
         }
+
         return new ResponseEntity<>(items, HttpStatus.OK);
     }
 

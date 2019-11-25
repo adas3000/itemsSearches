@@ -1,5 +1,10 @@
 package com.promo.promotions.Methods;
 
+import com.promo.promotions.enums.ExchangeRates;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 public class MyString {
 
     public static String insert(String str,String what,int where){
@@ -10,4 +15,11 @@ public class MyString {
 
         return result;
     }
+
+    public static String toPln(ExchangeRates from, BigDecimal value){
+        BigDecimal pln = new BigDecimal("0");
+        pln = pln.add(new BigDecimal(value.doubleValue()*from.getValue()));
+        return pln.setScale(2, RoundingMode.CEILING).toString()+" zł";
+    }
+
 }

@@ -7,6 +7,16 @@ public class Item {
     private BigDecimal price;
     private String url;
     private String fullPrice;
+    private String shop;
+    private String priceInPlnIfPlnNotDefault;
+
+    public String getPriceInPlnIfPlnNotDefault() {
+        return priceInPlnIfPlnNotDefault;
+    }
+
+    public void setPriceInPlnIfPlnNotDefault(String priceInPlnIfPlnNotDefault) {
+        this.priceInPlnIfPlnNotDefault = priceInPlnIfPlnNotDefault;
+    }
 
     public String getFullPrice() {
         return fullPrice;
@@ -51,5 +61,21 @@ public class Item {
         return new BigDecimal(value);
     }
 
+    public String getShop() {
+        return shop;
+    }
 
+    public void setShop(String shop) {
+        this.shop = shop;
+    }
+
+    @Override
+    public String toString() {
+        return "Item{" +
+                "title='" + title + '\'' +
+                ", price=" + price +
+                ", url='" + url + '\'' +
+                ", fullPrice='" + fullPrice + '\'' +
+                '}';
+    }
 }
