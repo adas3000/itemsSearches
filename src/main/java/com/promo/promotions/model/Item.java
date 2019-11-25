@@ -7,6 +7,7 @@ public class Item {
     private BigDecimal price;
     private String url;
     private String fullPrice;
+    private String shop;
 
     public String getFullPrice() {
         return fullPrice;
@@ -49,6 +50,14 @@ public class Item {
 
         value = value.replace(",", ".");
         return new BigDecimal(value);
+    }
+
+    public String getShop() {
+        return shop;
+    }
+
+    public void setShop(String shop) {
+        this.shop = shop;
     }
 
     @Override

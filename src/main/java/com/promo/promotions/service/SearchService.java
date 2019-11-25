@@ -61,7 +61,7 @@ public class SearchService {
             System.out.print("Exception:" + e.getMessage());
             return new ResponseEntity<>("Error_in_searchByValueAndCategoryDiffMeth", HttpStatus.BAD_REQUEST);
         }
-        
+
         return new ResponseEntity<>(items, HttpStatus.OK);
     }
 

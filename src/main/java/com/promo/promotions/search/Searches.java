@@ -97,6 +97,7 @@ public class Searches {
         List<Item> items = this.search(shop.getPathPrice(), shop.getPathName(), url, shop.getGetByXPathParent());
         items.forEach(item -> {
             if (shop.isNeedsOriginUrlTohref()) item.setUrl(shop.getOriginUrl() + item.getUrl());
+            item.setShop(shop.toString());
         });
         return items;
     }
