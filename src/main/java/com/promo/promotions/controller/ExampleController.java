@@ -14,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/example")
+@CrossOrigin
 public class ExampleController {
 
     @Autowired
@@ -32,6 +33,7 @@ public class ExampleController {
 
     @GetMapping("/search")
     public ResponseEntity<Object> search(@RequestBody @NonNull @Valid SearchCategoryAndValueRequest searchCategoryAndValueRequest) {
+        System.out.printf("PARAMS:category:%s,value:%s",searchCategoryAndValueRequest.category,searchCategoryAndValueRequest.value);
         return searchService.searchByValueAndCategoryDiffMeth(searchCategoryAndValueRequest);
     }
 

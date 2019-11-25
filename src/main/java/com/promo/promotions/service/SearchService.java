@@ -24,6 +24,11 @@ public class SearchService {
 
 
     public ResponseEntity<Object> searchByValueAndCategoryDiffMeth(SearchCategoryAndValueRequest valueRequest) {
+
+        if(valueRequest.category==null || valueRequest.value==null){
+            return new ResponseEntity<>("parameter_is_null",HttpStatus.BAD_REQUEST);
+        }
+
         CategoriesTypes.Categories category;
         try {
             category = CategoriesTypes.Categories.valueOf(valueRequest.category);
