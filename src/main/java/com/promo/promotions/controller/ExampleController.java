@@ -1,10 +1,12 @@
 package com.promo.promotions.controller;
 
+import com.promo.promotions.enums.CategoriesTypes;
 import com.promo.promotions.model.Item;
 import com.promo.promotions.request.SearchCategoryAndValueRequest;
 import com.promo.promotions.search.Searches;
 import com.promo.promotions.service.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/example")
+@CrossOrigin
 public class ExampleController {
 
     @Autowired
@@ -40,5 +43,9 @@ public class ExampleController {
         return searchService.searchByValueAndCategoryDiffMeth(new SearchCategoryAndValueRequest(category, value));
     }
 
+    @GetMapping("/categories")
+    public ResponseEntity<Object> categories(){
+        return new ResponseEntity<>(CategoriesTypes.getAllToStr(), HttpStatus.OK);
+    }
 
 }
