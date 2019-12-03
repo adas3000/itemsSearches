@@ -27,10 +27,10 @@ public class ExampleController {
         return List.of("Bake", "Cake", "Tequila", "Else");
     }
 
-    @GetMapping("/allegrosearch")
-    public List<Item> searchItems(@RequestParam String searching) {
-        System.out.println("SERACHING " + searching);
-        return Searches.allegroSearchByString(searching);
+    @GetMapping("/paramssearch")
+    public ResponseEntity<Object> searchItems(@RequestParam String value, @RequestParam String category) {
+        System.out.println("SERACHING " + value);
+        return searchService.searchByValueAndCategoryDiffMeth(new SearchCategoryAndValueRequest(category,value));
     }
 
     @GetMapping("/search")

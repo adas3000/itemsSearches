@@ -22,7 +22,6 @@ public class ShopList {
                 new CategoriesTypes(CategoriesTypes.Categories.Cars, "https://allegro.pl/kategoria/motoryzacja?string=", false)},".//span[@class='fee8042']",
                 ".//h2[@class='ebc9be2 _5087f6f']/a","//div[@class='b659611 _307719f']",false));
 
-
         shopList.add(new Shop("Amazon","https://amazon.com",new CategoriesTypes[]{new CategoriesTypes(CategoriesTypes.Categories.All, "https://www.amazon.com/s?k=", false),
                 new CategoriesTypes(CategoriesTypes.Categories.Electronic, "https://www.amazon.com/s?k=" + replacementvalue + "&i=electronics", true),
                 new CategoriesTypes(CategoriesTypes.Categories.Books, "https://www.amazon.com/s?k=" + replacementvalue + "&i=stripbooks", true),
@@ -32,4 +31,6 @@ public class ShopList {
     public List<Shop> getShopList() {
         return shopList;
     }
+
+
 }

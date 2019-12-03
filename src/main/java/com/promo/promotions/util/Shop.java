@@ -8,6 +8,9 @@ import java.util.List;
 
 public class Shop {
 
+
+    private Long id;
+
     private String shopName;
     private String originUrl;
     private CategoriesTypes[] categories;
@@ -34,6 +37,13 @@ public class Shop {
         return categoriesTypesList.stream().anyMatch(c -> c.getCategory().equals(categories));
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getShopName() {
         return shopName;
