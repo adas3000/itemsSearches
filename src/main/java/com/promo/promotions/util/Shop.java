@@ -30,6 +30,11 @@ public class Shop {
         this.needsOriginUrlTohref = needsOriginUrlTohref;
     }
 
+    public boolean hasCategory(CategoriesTypes.Categories categories) {
+        return categoriesTypesList.stream().anyMatch(c -> c.getCategory().equals(categories));
+    }
+
+
     public String getShopName() {
         return shopName;
     }

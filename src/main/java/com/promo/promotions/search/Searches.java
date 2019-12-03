@@ -8,18 +8,21 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.promo.promotions.Methods.MyString;
 import com.promo.promotions.enums.CategoriesTypes;
 import com.promo.promotions.enums.ExchangeRates;
-import com.promo.promotions.enums.Shops;
 import com.promo.promotions.model.Item;
+import com.promo.promotions.util.Shop;
+import com.promo.promotions.util.ShopList;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
 public class Searches {
+
+    @Autowired
+    private ShopList shopList;
+
 
     public Searches() {
 
@@ -81,14 +84,16 @@ public class Searches {
         return searchResult;
     }
 
-    public List<Shops> findShopsByCategory(String value, CategoriesTypes.Categories categories) {
 
-        List<Shops> searchIn = new ArrayList<>(Arrays.asList(Shops.values()));
+    public List<Shop> findShopsByCategory(String value, CategoriesTypes.Categories categories){
 
-        return searchIn.stream().filter(s -> s.hasCategory(categories)).collect(Collectors.toList());
+        List<Shop> serachIn = shopList.getShopList();
+
+        return serachIn.stream().filter(s->s.hasCategory(categories)).collect(Collectors.toList());
     }
 
-    public List<Item> findAllByShopAndCategory(String value, Shops shop, CategoriesTypes.Categories categories) {
+
+    public List<Item> findAllByShopAndCategory(String value, Shop shop, CategoriesTypes.Categories categories) {
 
         CategoriesTypes categoriesTypes = shop.getCategoriesTypesList().stream().filter(s -> s.getCategory().equals(categories)).findFirst().orElse(null);
 
@@ -106,6 +111,7 @@ public class Searches {
         });
         return items;
     }
+
 
     private List<Item> search(String pathPrice, String pathName, String searchUrl, String getByXPath) {
         List<Item> searchResult = new ArrayList<>();

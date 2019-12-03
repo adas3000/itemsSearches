@@ -1,10 +1,10 @@
 package com.promo.promotions.service;
 
 import com.promo.promotions.enums.CategoriesTypes;
-import com.promo.promotions.enums.Shops;
 import com.promo.promotions.model.Item;
 import com.promo.promotions.request.SearchCategoryAndValueRequest;
 import com.promo.promotions.search.Searches;
+import com.promo.promotions.util.Shop;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,25 +36,21 @@ public class SearchService {
         }
         String value = valueRequest.value;
 
-        List<Shops> searchIn = searches.findShopsByCategory(value, category);
+        List<Shop> searchIn = searches.findShopsByCategory(value, category);
         if (searchIn == null || searchIn.size() == 0) {
             return new ResponseEntity<>("no_shops_founded", HttpStatus.NOT_FOUND);
         }
-
         List<Item> items = new ArrayList<>();
-
-            items.addAll(searches.findAllByShopAndCategory(value,Shops.Allegro,category));
-
 
         try {
             List<Thread> currentThreads = new ArrayList<>();
 
-            for (Shops shop : searchIn) {
+            for (Shop shop : searchIn) {
                 Thread thread = new Thread(() -> {
                     synchronized (items) {
                         items.addAll(searches.findAllByShopAndCategory(value, shop, category));
                     }
-                    System.out.print("Thread:" + shop.toString() + " finished\n");
+                    System.out.print("\nThread:" + shop.toString() + " finished");
                 });
                 currentThreads.add(thread);
                 thread.start();
