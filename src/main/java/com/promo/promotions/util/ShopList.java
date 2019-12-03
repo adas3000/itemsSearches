@@ -26,6 +26,7 @@ public class ShopList {
                 new CategoriesTypes(CategoriesTypes.Categories.Electronic, "https://www.amazon.com/s?k=" + replacementvalue + "&i=electronics", true),
                 new CategoriesTypes(CategoriesTypes.Categories.Books, "https://www.amazon.com/s?k=" + replacementvalue + "&i=stripbooks", true),
         },".//span[@class='a-price']/span", ".//a[@class='a-link-normal a-text-normal']","//div[@class='sg-col-inner']",true));
+
     }
 
     public List<Shop> getShopList() {

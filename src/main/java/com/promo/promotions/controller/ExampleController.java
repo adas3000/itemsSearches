@@ -30,6 +30,7 @@ public class ExampleController {
     @GetMapping("/paramssearch")
     public ResponseEntity<Object> searchItems(@RequestParam String value, @RequestParam String category, @RequestParam String limit) {
 
+        System.out.printf("limit:%s\n",limit);
 
         return searchService.searchByValueAndCategoryDiffMeth(new SearchCategoryAndValueRequest(category, value, limit));
     }

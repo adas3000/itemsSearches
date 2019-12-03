@@ -28,7 +28,6 @@ public class SearchService {
             return new ResponseEntity<>("parameter_is_null",HttpStatus.BAD_REQUEST);
         }
 
-
         CategoriesTypes.Categories category;
         try {
             category = CategoriesTypes.Categories.valueOf(valueRequest.category);
