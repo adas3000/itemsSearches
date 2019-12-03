@@ -28,14 +28,15 @@ public class ExampleController {
     }
 
     @GetMapping("/paramssearch")
-    public ResponseEntity<Object> searchItems(@RequestParam String value, @RequestParam String category) {
-        System.out.println("SERACHING " + value);
-        return searchService.searchByValueAndCategoryDiffMeth(new SearchCategoryAndValueRequest(category,value));
+    public ResponseEntity<Object> searchItems(@RequestParam String value, @RequestParam String category, @RequestParam String limit) {
+
+
+        return searchService.searchByValueAndCategoryDiffMeth(new SearchCategoryAndValueRequest(category, value, limit));
     }
 
     @GetMapping("/search")
     public ResponseEntity<Object> search(@RequestBody @NonNull @Valid SearchCategoryAndValueRequest searchCategoryAndValueRequest) {
-        System.out.printf("PARAMS:category:%s,value:%s",searchCategoryAndValueRequest.category,searchCategoryAndValueRequest.value);
+        System.out.printf("PARAMS:category:%s,value:%s", searchCategoryAndValueRequest.category, searchCategoryAndValueRequest.value);
         return searchService.searchByValueAndCategoryDiffMeth(searchCategoryAndValueRequest);
     }
 
@@ -45,7 +46,7 @@ public class ExampleController {
     }
 
     @GetMapping("/categories")
-    public ResponseEntity<Object> categories(){
+    public ResponseEntity<Object> categories() {
         return new ResponseEntity<>(CategoriesTypes.getAllToStr(), HttpStatus.OK);
     }
 

@@ -28,6 +28,7 @@ public class SearchService {
             return new ResponseEntity<>("parameter_is_null",HttpStatus.BAD_REQUEST);
         }
 
+
         CategoriesTypes.Categories category;
         try {
             category = CategoriesTypes.Categories.valueOf(valueRequest.category);
@@ -48,7 +49,7 @@ public class SearchService {
             for (Shop shop : searchIn) {
                 Thread thread = new Thread(() -> {
                     synchronized (items) {
-                        items.addAll(searches.findAllByShopAndCategory(value, shop, category));
+                        items.addAll(searches.findAllByShopAndCategory(value, shop, category,Integer.parseInt(valueRequest.limit)));
                     }
                     System.out.print("\nThread:" + shop.toString() + " finished");
                 });
@@ -58,7 +59,12 @@ public class SearchService {
             for (Thread t : currentThreads) {
                 while (t.isAlive()) TimeUnit.SECONDS.sleep(1);
             }
-        } catch (Exception e) {
+        }
+        catch(NumberFormatException e){
+            System.out.println("Non valid limit value");
+            return new ResponseEntity<>("wrong_limit_value",HttpStatus.BAD_REQUEST);
+        }
+        catch (Exception e) {
             System.out.print("Exception:" + e.getMessage());
             return new ResponseEntity<>("Error_in_searchByValueAndCategoryDiffMeth", HttpStatus.BAD_REQUEST);
         }

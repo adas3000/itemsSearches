@@ -1,6 +1,5 @@
 package com.promo.promotions.search;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
@@ -13,6 +12,7 @@ import com.promo.promotions.util.Shop;
 import com.promo.promotions.util.ShopList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,17 +23,11 @@ public class Searches {
     @Autowired
     private ShopList shopList;
 
-
-    public Searches() {
-
-    }
-
-
-    public List<Shop> findShopsByCategory(String value, CategoriesTypes.Categories categories){
+    public List<Shop> findShopsByCategory(String value, CategoriesTypes.Categories categories) {
 
         List<Shop> serachIn = shopList.getShopList();
 
-        return serachIn.stream().filter(s->s.hasCategory(categories)).collect(Collectors.toList());
+        return serachIn.stream().filter(s -> s.hasCategory(categories)).collect(Collectors.toList());
     }
 
 
@@ -49,10 +43,23 @@ public class Searches {
         List<Item> items = this.search(shop.getPathPrice(), shop.getPathName(), url, shop.getGetByXPathParent());
         items.forEach(item -> {
             if (shop.isNeedsOriginUrlTohref()) item.setUrl(shop.getOriginUrl() + item.getUrl());
-            if(!item.getFullPrice().contains(".")) item.setFullPrice(MyString.insert(item.getFullPrice(),".",item.getFullPrice().length()-2));
-            if(!item.getFullPrice().contains("zł") && !item.getFullPrice().contains("$")) item.setFullPrice(item.getFullPrice()+" zł");
+            if (!item.getFullPrice().contains("."))
+                item.setFullPrice(MyString.insert(item.getFullPrice(), ".", item.getFullPrice().length() - 2));
+            if (!item.getFullPrice().contains("zł") && !item.getFullPrice().contains("$"))
+                item.setFullPrice(item.getFullPrice() + " zł");
             item.setShop(shop.getShopName());
         });
+        return items;
+    }
+
+    public List<Item> findAllByShopAndCategory(String value, Shop shop, CategoriesTypes.Categories categories, int limit_count) {
+
+        List<Item> items = findAllByShopAndCategory(value, shop, categories);
+
+        if (limit_count > 0) {
+            items = items.stream().limit(limit_count).collect(Collectors.toList());
+        }
+
         return items;
     }
 
@@ -82,8 +89,8 @@ public class Searches {
                 item1.setFullPrice(itemPrice);
                 item1.setPrice(Item.aStringToBDecimal(itemPrice));
 
-                if(itemPrice.contains("$")){
-                    item1.setPriceInPlnIfPlnNotDefault(MyString.toPln(ExchangeRates.Dolar,item1.getPrice()));
+                if (itemPrice.contains("$")) {
+                    item1.setPriceInPlnIfPlnNotDefault(MyString.toPln(ExchangeRates.Dolar, item1.getPrice()));
                 }
 
                 searchResult.add(item1);
